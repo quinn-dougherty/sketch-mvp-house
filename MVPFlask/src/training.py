@@ -6,14 +6,14 @@ from sklearn.model_selection import train_test_split
 
 from .clean import Data, PTHURL
 from .metric_report import MetricReport
-from .utils import Spinner
-spin = Spinner()
+#from .utils import Spinner
+#spin = Spinner()
 
 dat = Data(PTHURL)
 X = dat.X
 y = dat.y
 
-
+'''
 class GBR:
 
     def __init__(self, X: pd.DataFrame = X, y: pd.DataFrame = y):
@@ -37,7 +37,7 @@ class GBR:
         self.model = Train(self.params, self.dtrain, self.num_round)
         self.prediction = self.model.predict(self.dtest)
 
-
+'''
 class RFR:
     def __init__(self, X: pd.DataFrame = X, y: pd.DataFrame = y):
         from sklearn.ensemble import RandomForestRegressor
@@ -48,16 +48,17 @@ class RFR:
         self.prediction = self.model.predict(self.X_test)
 
 
-spin.start()
-gbr = GBR(X, y)
+#spin.start()
+#gbr = GBR(X, y)
 
 rfr = RFR(X, y)
 
 REPORTS = {
-    'gradient boost performance': MetricReport(
-        gbr.y_test.values,
-        gbr.prediction).show,
+    #'gradient boost performance': MetricReport(
+#        gbr.y_test.values,
+#        gbr.prediction).show#,
     'random forest performance': MetricReport(
         rfr.y_test,
         rfr.prediction).show}
-spin.stop()
+
+#spin.stop()

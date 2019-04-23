@@ -6,8 +6,8 @@ from .utils import Spinner
 import pandas as pd
 import numpy as np
 import re
-PTHURL = "https://raw.githubusercontent.com/quinn-dougherty/sketch-mvp-house/master/mvp-flask/3rdpartyExport.csv"#'./3rdpartyExport.csv'
-spin = Spinner()
+PTHURL = "https://raw.githubusercontent.com/quinn-dougherty/sketch-mvp-house/master/MVPFlask/src/3rdpartyExport.csv"#'./3rdpartyExport.csv'
+#spin = Spinner()
 
 
 class Data:
@@ -18,7 +18,7 @@ class Data:
     '''
 
     def __init__(self, csv_string):
-        spin.start()
+        #spin.start()
         self.dat = self.clean(pd.read_csv(csv_string))
         self.regressands = [
             'home_size',
@@ -26,7 +26,7 @@ class Data:
             'baths_total' ]
         self.X = self.dat[self.regressands]
         self.y = self.dat['sale_price']
-        spin.stop()
+        #spin.stop()
 
     def clean(self, dat: pd.DataFrame) -> pd.DataFrame:
         ''''''

@@ -8,8 +8,10 @@ import re
 from pyzillow.pyzillow import ZillowWrapper, GetDeepSearchResults
 from pyzillow.pyzillowerrors import ZillowError
 import os
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
 
-ZILLOW_KEY = os.environ['ZILLOW_KEY']
+ZILLOW_KEY = "X1-ZWz1827x6v9n9n_77v70"#os.environ['ZILLOW_KEY']
 
 def addr_zip_split(raw_add: str) -> Tuple[str, str]:
     zippat = r'[0-9]{5}$'
@@ -27,15 +29,16 @@ def cityfunc(x: str) -> Tuple[float, float]:
 
 application = app = Flask(__name__)
 app.config['TESTING'] = True
+with open('src/RFR_mvp_pick.pickle', 'rb') as rp:
+    rfr, report = pickle.load(rp)
+
+print(report)#['random forest performance'])
 
 @app.route("/", methods=['POST'])  # <ligid>/<seqid>", methods=['POST']
 def get():
     lines = request.get_json(force=True)
     address_: str = lines['address']  # keys in file test_json_get.py
     predictants: List[float] = lines['predictands']
-
-    with open('src/RFR_mvp_pick.pickle', 'rb') as rp:
-        rfr, report = pickle.load(rp)
 
     address, zipcode = addr_zip_split(address_)
 
