@@ -10,7 +10,6 @@ pandas = "*"
 sklearn = "*"
 flask = "*"
 numpy = "*"
-xgboostt = "*"
 xgboost = "*"
 
 [requires]
