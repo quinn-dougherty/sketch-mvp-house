@@ -1,5 +1,0 @@
-# serve mvp w flask
-
-
-
-
