@@ -10,6 +10,7 @@ metrics.r2_score(y_true, y_pred[, …]) 	R^2 (coefficient of determination) regr
 
 from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, mean_squared_log_error, median_absolute_error, r2_score
 
+
 class MetricReport:
     def __init__(self, y, yhat):
         self.y_true = y
@@ -17,6 +18,9 @@ class MetricReport:
         self.metrics = [explained_variance_score, mean_absolute_error,
                         mean_squared_error, mean_squared_log_error,
                         median_absolute_error, r2_score]
-        self.metric_scores = {metric: metric(y, yhat) for metric in self.metrics}
-        self.reports = [f"The error {metric.__name__} scored at {self.metric_scores[metric]:.4}" for metric in self.metrics]
+        self.metric_scores = {
+            metric: metric(
+                y, yhat) for metric in self.metrics}
+        self.reports = [
+            f"The error {metric.__name__} scored at {self.metric_scores[metric]:.4}" for metric in self.metrics]
         self.show = '\n'.join(self.reports)

@@ -1,41 +1,75 @@
-''' attempting to do it not as RESTful ''' 
-from flask import Flask, request, jsonify#, response_class
+''' attempting to do it not as RESTful '''
+from flask import Flask, request, jsonify  # , response_class
 import json
 import pickle
 import numpy as np
 from typing import List, Tuple
+import re
+from pyzillow.pyzillow import ZillowWrapper, GetDeepSearchResults
+from pyzillow.pyzillowerrors import ZillowError
+import os
+
+ZILLOW_KEY = os.environ['ZILLOW_KEY']
+
+def addr_zip_split(raw_add: str) -> Tuple[str, str]:
+    zippat = r'[0-9]{5}$'
+    zipcode = re.search(zippat, raw_add).group()
+    address = raw_add[:(len(raw_add)-len(zipcode)-1)]
+    return address, zipcode
 
 def cityfunc(x: str) -> Tuple[float, float]:
     ''' Take an address and return an upper and lower bound on it's price '''
     print("TODO: IMPLEMENT address -> (lower, upper) bound FUNCTION")
-    # TODO -- return df[df.city==parse_out_city_from_address(address)].min(),  df[df.city==parse_out_city_from_address(address)].max()
+    # TODO -- return df[df.city==parse_out_city_from_address(address)].min(),
+    # df[df.city==parse_out_city_from_address(address)].max()
     return (0, 100000)
 
-application = app = Flask(__name__)
 
-@app.route("/", methods=['POST'])      #<ligid>/<seqid>", methods=['POST']
+application = app = Flask(__name__)
+app.config['TESTING'] = True
+
+@app.route("/", methods=['POST'])  # <ligid>/<seqid>", methods=['POST']
 def get():
     lines = request.get_json(force=True)
-    address: str = lines['address'] # keys in file test_json_get.py
+    address_: str = lines['address']  # keys in file test_json_get.py
     predictants: List[float] = lines['predictands']
 
-    with open('RFR_mvp_pick.pickle', 'rb') as rp:
+    with open('RFR_mvp_pick1.pickle', 'rb') as rp:
         rfr, report = pickle.load(rp)
 
+    address, zipcode = addr_zip_split(address_)
 
-    valuation = rfr.model.predict(np.array([predictants]))[0]
+    try:
+        zillow_data = ZillowWrapper(ZILLOW_KEY)
+        deep_search_response = zillow_data.get_deep_search_results(address,zipcode)
+        result = GetDeepSearchResults(deep_search_response)
 
-    outdat = {'upper_lower_bound_by_city': cityfunc(address), 'valuation': valuation}
-    
-    response = app.response_class(
-            response=json.dumps(outdat), 
-            status=200, 
+        predictants: List[float] = [result.home_size, result.bedrooms, result.bathrooms] # ['home_size', 'home_size', 'last_sold_price']
+
+        valuation: float = rfr.model.predict(np.array([predictants]))[0]
+
+        outdat = {'upper_lower_bound_by_city': cityfunc(
+            address), 'valuation': valuation}
+
+        response = app.response_class(
+            response=json.dumps(outdat),
+            status=200,
             mimetype='application/json'
-            )
+        )
 
-    #response = Response(outdat, stat
-    return response
+        print(outdat)
+       
+        return response
+   
+    except ZillowError as e1:
+        message = "address given not available in zillow api. Please try another address"
+        print(message)
 
-if __name__=='__main__': 
+        return app.response_class(response=json.dumps({"FAIL": message}),
+                                  status=200,
+                                  mimetype='application/json'
+        )
+
+
+if __name__ == '__main__':
     app.run(debug=True)
-
