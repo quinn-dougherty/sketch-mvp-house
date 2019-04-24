@@ -2,7 +2,7 @@
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-
+import pandas as pd
 from .clean import Data, PTHURL
 from .metric_report import MetricReport
 #from .utils import Spinner
