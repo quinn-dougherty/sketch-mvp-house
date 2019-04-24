@@ -1,5 +1,6 @@
 .env
-export_env_vars.sh 
+export_env_v*
+*.zip
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
