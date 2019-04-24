@@ -41,7 +41,9 @@ print(report)
 def get():
     lines = request.get_json(force=True)
     address_: str = lines['address']
-    predictants: List[float] = lines['predictands']
+    #predictants: List[float] = lines['predictands']
+    # NOTE: TODO: edit in the TEST_REQUESTS notebook to ONLY SEND THE ADDRESS KEY. 
+    # # The predicands key _hasn't evne been being used_ 
 
     address, zipcode = addr_zip_split(address_)
 
@@ -53,7 +55,7 @@ def get():
             address, zipcode)
         result = GetDeepSearchResults(deep_search_response)
 
-        # ['home_size', 'home_size', 'last_sold_price']
+        # ['home_size', 'bedrooms', 'bathrooms']
         predictants: List[float] = [
             result.home_size,
             result.bedrooms,
