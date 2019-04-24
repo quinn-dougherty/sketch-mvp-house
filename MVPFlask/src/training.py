@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -38,6 +37,8 @@ class GBR:
         self.prediction = self.model.predict(self.dtest)
 
 '''
+
+
 class RFR:
     def __init__(self, X: pd.DataFrame = X, y: pd.DataFrame = y):
         from sklearn.ensemble import RandomForestRegressor
@@ -48,17 +49,17 @@ class RFR:
         self.prediction = self.model.predict(self.X_test)
 
 
-#spin.start()
+# spin.start()
 #gbr = GBR(X, y)
 
 rfr = RFR(X, y)
 
 REPORTS = {
-    #'gradient boost performance': MetricReport(
-#        gbr.y_test.values,
-#        gbr.prediction).show#,
+    # 'gradient boost performance': MetricReport(
+    #        gbr.y_test.values,
+    #        gbr.prediction).show#,
     'random forest performance': MetricReport(
         rfr.y_test,
         rfr.prediction).show}
 
-#spin.stop()
+# spin.stop()
